@@ -16,30 +16,9 @@
                 </div>
                 @if (isset($item) && $item->file_data)
                     <h2 class="text-gray-900 dark:text-gray-100">Modul Preview:</h2>
-                    @php
-                        $isImage = strpos($item->mime_type, 'image') !== false;
-                        $isPDF = $item->mime_type === 'application/pdf';
-                        $officeFileTypes = [
-                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                            'application/msword',
-                            'application/vnd.ms-excel',
-                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                            'application/vnd.ms-powerpoint',
-                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-                        ];
-                        $isOfficeFile = in_array($item->mime_type, $officeFileTypes);
-                    @endphp
-
-                    @if ($isImage || $isPDF)
-                        <iframe src="{{ route('modul.show', ['modul' => $item->id]) }}" class="w-full h-full"></iframe>
-                    @elseif ($isOfficeFile)
-                        <iframe
-                            src="https://docs.google.com/viewer?url={{ urlencode(route('modul.show', ['modul' => $item->id])) }}&embedded=true"
-                            class="w-full h-full"></iframe>
-                    @else
-                        <p>Uploaded file cannot be previewed. Click <a
-                                href="{{ route('modul.show', ['modul' => $item->id]) }}">here</a> to download.</p>
-                    @endif
+                    <iframe
+                        src="https://docs.google.com/viewer?url={{ urlencode(route('modul.show', ['modul' => $item->id])) }}&embedded=true"
+                        class="w-full h-full"></iframe>
                 @endif
             </div>
         </div>

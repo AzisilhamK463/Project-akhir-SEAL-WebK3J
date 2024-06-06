@@ -1,44 +1,37 @@
 <x-app-layout>
     @slot('title')
-        {{ __('Modul') }}
+        {{ __('My Bookmarks') }}
     @endslot
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Modul') }}
+            {{ __('My Bookmarks') }}
         </h2>
     </x-slot>
 
     <x-container class="p-6">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg px-3 py-3">
-            @auth
-                <a href="{{ route('modul.create') }}">
-                    <x-primary-button class="mb-6">
-                        {{ __('Create a Modul') }}
-                    </x-primary-button>
-                </a>
-            @endauth
             <div class="text-gray-900 dark:text-gray-100 mb-3">
                 {{ __('Modules :') }}
             </div>
             <div class="grid grid-cols-5 gap-5 py-4">
-                @foreach ($modul as $item)
+                @foreach ($bookmarks as $item)
                     <x-card class="w-full">
                         <x-card.header>
                             <x-card.title>
-                                {{ $item->name }}
+                                {{ $item->modul->name }}
                             </x-card.title>
                             <x-card.filename>
-                                {{ $item->file_name }}
+                                {{ $item->modul->file_name }}
                             </x-card.filename>
                             <x-card.file-type>
-                                {{ $item->file_type }}
+                                {{ $item->modul->file_type }}
                             </x-card.file-type>
                             <x-card.description>
-                                {{ $item->description }}
+                                {{ $item->modul->description }}
                             </x-card.description>
                             <div class="flex items-center space-x-2 gap-x-6">
-                                <a href="{{ route('modul.download', $item) }}">
+                                <a href="{{ route('modul.download', $item->modul) }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="size-5 stroke-green-700">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -46,11 +39,11 @@
                                     </svg>
                                 </a>
                                 @auth
-                                    @if (auth()->user()->bookmarks->contains('modul_id', $item->id))
+                                    @if (auth()->user()->bookmarks->contains('modul_id', $item->modul_id))
                                         <form action="{{ route('bookmark.destroy') }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <input type="hidden" name="modul_id" value="{{ $item->id }}">
+                                            <input type="hidden" name="modul_id" value="{{ $item->modul_id }}">
                                             <button type="submit" class="pt-1"><svg xmlns="http://www.w3.org/2000/svg"
                                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                                     stroke="currentColor" class="size-5 stroke-orange-600">
@@ -62,7 +55,7 @@
                                     @else
                                         <form action="{{ route('bookmark.store') }}" method="POST">
                                             @csrf
-                                            <input type="hidden" name="modul_id" value="{{ $item->id }}">
+                                            <input type="hidden" name="modul_id" value="{{ $item->modul_id }}">
                                             <button type="submit" class="pt-1"><svg xmlns="http://www.w3.org/2000/svg"
                                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                                     stroke="currentColor" class="size-5 stroke-yellow-500">
@@ -72,16 +65,15 @@
                                             </button>
                                         </form>
                                     @endif
-                                    @if ($item->user_id === auth()->user()->id)
-                                        <a href="{{ route('modul.edit', $item) }}">
+                                    @if ($item->modul->user_id === auth()->user()->id)
+                                        <a href="{{ route('modul.edit', $item->modul) }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="size-5 stroke-cyan-500">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                             </svg>
-
                                         </a>
-                                        <form action="{{ route('modul.destroy', $item) }}" method="POST"
+                                        <form action="{{ route('modul.destroy', $item->modul) }}" method="POST"
                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus modul ini?');">
                                             @csrf
                                             @method('DELETE')
@@ -98,7 +90,7 @@
                             </div>
                         </x-card.header>
                         <x-card.content>
-                            <x-preview :item="$item" />
+                            <x-preview :item="$item->modul" />
                         </x-card.content>
                     </x-card>
                 @endforeach

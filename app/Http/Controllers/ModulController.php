@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Modul;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+// use Illuminate\Http\Request;
 use App\Http\Requests\ModulRequest;
+// use Illuminate\Support\Facades\Response;
 
 class ModulController extends Controller
 {
@@ -64,10 +66,39 @@ class ModulController extends Controller
     {
         $modul = Modul::findOrFail($id);
 
-        return response($modul->file_data)
-            ->header('Content-Type', $modul->mime_type)
-            ->header('Content-Disposition', 'inline; filename="' . $modul->file_name . '"');
+        // $urlfile = $this->generateTemporaryUrl($modul);
+        // $url = "https://docs.google.com/viewer?url=" . urlencode($urlfile) . "&embedded=true";
+        // return dd($url);
+
+        // return Response::make($modul->file_data)
+        //     ->header('Content-Type', $modul->mime_type)
+        //     ->header('Content-Disposition', 'inline; filename="' . $modul->file_name . '"');
+        return redirect()->away($this->generateTemporaryUrl($modul));
     }
+
+    private function generateTemporaryUrl($file)
+    {
+        // Tentukan nama file sementara
+        $filename = 'temp_' . $file->id . '.' . $file->file_type;
+
+        // Simpan file di storage sementara
+        Storage::disk('public')->put('temp/' . $filename, $file->file_data);
+
+        // Buat URL untuk file sementara
+        return Storage::url('temp/' . $filename);
+    }
+
+    public function download($id)
+   {
+       $modul = Modul::findOrFail($id);
+       return response()->streamDownload(function () use ($modul) {
+           echo $modul->file_data;
+       }, $modul->file_name, [
+           'Content-Type' => $modul->mime_type,
+           'Content-Disposition' => 'attachment; filename="' . $modul->file_name . '"',
+       ]);
+   }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -109,3 +140,4 @@ class ModulController extends Controller
         return redirect()->route('modul.index');
     }
 }
+

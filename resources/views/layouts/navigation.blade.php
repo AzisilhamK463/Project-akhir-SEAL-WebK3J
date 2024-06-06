@@ -16,6 +16,9 @@
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('bookmark.showByUser', auth()->user()->id)" :active="request()->routeIs('bookmark.showByUser')">
+                            {{ __('My Bookmarks') }}
+                        </x-nav-link>
                     @else
                         <x-nav-link :href="route('landing-page')" :active="request()->routeIs('landing-page')">
                             {{ __('Landing Page') }}
@@ -99,6 +102,9 @@
             @auth
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('bookmark.showByUser', auth()->user()->id)" :active="request()->routeIs('bookmark.showByUser')">
+                    {{ __('My Bookmarks') }}
                 </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link :href="route('landing-page')" :active="request()->routeIs('landing-page')">
