@@ -16,11 +16,38 @@
                 </div>
                 @if (isset($item) && $item->file_data)
                     <h2 class="text-gray-900 dark:text-gray-100">Modul Preview:</h2>
-                    <iframe
-                        src="https://docs.google.com/viewer?url={{ urlencode(route('modul.show', ['modul' => $item->id])) }}&embedded=true"
-                        class="w-full h-full"></iframe>
+                    @php
+                    
+                        
+                        $isImage = strpos($item->mime_type, 'image') !== false;
+                        $isPDF = $item->mime_type === 'application/pdf';
+                        $officeFileTypes = [
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'application/msword',
+                            'application/vnd.ms-excel',
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                            'application/vnd.ms-powerpoint',
+                            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                        ];
+                        $isOfficeFile = in_array($item->mime_type, $officeFileTypes);
+                        
+                       
+                    @endphp
+                    @if ($isImage || $isPDF)
+                        <iframe src="{{ route('modul.show', ['modul' => $item->id]) }}" class="w-full h-full"></iframe>
+                    @elseif ($isOfficeFile)
+                        <iframe src="{{ route('modul.show', ['modul' => $item->id]) }}" class="w-full h-full"></iframe>
+                    @else
+                        <p>Uploaded file cannot be previewed. Click <a
+                            href="{{ route('modul.show', ['modul' => $item->id]) }}" class="text-blue-500 underline">here</a> to download.</p>
+                    @endif
+                @else
+                    <p>No file data available.</p>
                 @endif
             </div>
         </div>
     </div>
 </div>
+
+<!-- Ensure Alpine.js is loaded -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.3/cdn.min.js" integrity="sha384-WJjkwfwjSA9R8jBkDaVBHc+idGbOa+2W4uq2SOwLCHXyNktpMVINGAD2fCYbUZn6" crossorigin="anonymous"></script>
