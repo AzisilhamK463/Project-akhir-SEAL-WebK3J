@@ -12,8 +12,8 @@ Route::get('/dashboard', function () {
 Route::resource('modul', Controllers\ModulController::class);
 
 Route::get('modul/download/{id}', [Controllers\ModulController::class, 'download'])->name('modul.download');
-// Route::get('modul', [Controllers\ModulController::class, 'index'])->name('modul.index');
-// Route::get('modul/{modul:id}', [Controllers\ModulController::class, 'show'])->name('modul.show');
+Route::get('modul', [Controllers\ModulController::class, 'index'])->name('modul.index');
+Route::get('modul/{modul:id}', [Controllers\ModulController::class, 'show'])->name('modul.show');
 
 Route::middleware('auth')->group(function () {
     // Route::middleware('verified')->group(function () {
