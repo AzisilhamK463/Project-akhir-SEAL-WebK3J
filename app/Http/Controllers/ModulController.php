@@ -6,7 +6,7 @@ use App\Models\Modul;
 use Illuminate\Support\Facades\Storage;
 // use Illuminate\Http\Request;
 use App\Http\Requests\ModulRequest;
-// use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Response;
 
 class ModulController extends Controller
 {
@@ -70,10 +70,10 @@ class ModulController extends Controller
         // $url = "https://docs.google.com/viewer?url=" . urlencode($urlfile) . "&embedded=true";
         // return dd($url);
 
-        // return Response::make($modul->file_data)
-        //     ->header('Content-Type', $modul->mime_type)
-        //     ->header('Content-Disposition', 'inline; filename="' . $modul->file_name . '"');
-        return redirect()->away($this->generateTemporaryUrl($modul));
+        return Response::make($modul->file_data)
+            ->header('Content-Type', $modul->mime_type)
+            ->header('Content-Disposition', 'inline; filename="' . $modul->file_name . '"');
+        // return redirect()->away($this->generateTemporaryUrl($modul));
     }
 
     private function generateTemporaryUrl($file)
